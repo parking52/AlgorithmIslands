@@ -10,9 +10,26 @@
       
       @media print {
         @page { margin: 0; size: auto; }
-        body { -webkit-print-color-adjust: exact; }
+        /* Reset all structural constraints for print */
+        html, body, #root { 
+          height: auto !important; 
+          width: 100% !important;
+          overflow: visible !important; 
+          display: block !important;
+          position: static !important;
+        }
+        
+        /* Force background colors */
+        body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        
+        /* Hide everything by default, then let App.tsx show specific print-block elements */
         .no-print { display: none !important; }
-        .page-break { break-after: page; page-break-after: always; }
+        
+        .page-break { 
+          break-after: page; 
+          page-break-after: always;
+          min-height: 100vh; /* Ensure full page usage */
+        }
       }
       
       .font-pirate-title { family: 'Cinzel Decorative', cursive; }

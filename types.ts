@@ -9,7 +9,10 @@ export enum TerrainType {
   HOUSE = 'HOUSE',
   COIN = 'COIN',
   CHEST = 'CHEST',
-  VOLCANO = 'VOLCANO'
+  VOLCANO = 'VOLCANO',
+  GEM = 'GEM',
+  PARROT = 'PARROT',
+  SHELL = 'SHELL'
 }
 
 export interface MapCell {
@@ -24,7 +27,7 @@ export type GridData = GridRow[];
 
 export interface Reference {
   id: string; // e.g. "101" for Page 1, Ref 01
-  type: 'CLUE' | 'PUZZLE' | 'TREASURE' | 'POINTER' | 'DECOY';
+  type: 'CLUE' | 'PUZZLE' | 'TREASURE' | 'POINTER' | 'DECOY' | 'COIN';
   content: string; 
   value?: number; 
 }
@@ -49,6 +52,9 @@ export interface TreasureHunt {
   startRefId: string;
   description: string;
   solutionPath: HuntStep[];
+  // Pedagogical info
+  topic: string; // e.g. "Pointers"
+  concept: string; // e.g. "Teaches how memory works..."
 }
 
 export interface BookData {
