@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { STATIC_BOOK } from '../data/staticBook';
 import { BookData, TreasureHunt } from '../types';
+import { validateBookStructure, ValidationResult } from '../utils/bookStructure';
 
 interface BookContextType {
   bookData: BookData;
@@ -8,6 +9,7 @@ interface BookContextType {
   setIsPreviewMode: (mode: boolean) => void;
   getPageForRef: (refId: string) => string;
   handleExportPDF: () => void;
+  validateBook: () => ValidationResult;
 }
 
 const BookContext = createContext<BookContextType | undefined>(undefined);
@@ -34,8 +36,28 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
     return page ? page.pageNumber.toString() : '?';
   };
 
-  // PDF export functionality
+  // PDF export functionality with validation
   const handleExportPDF = () => {
+    // Run validation first
+    const validation = validateBookStructure(bookData);
+    if (!validation.isValid) {
+      const errorMessages = validation.errors
+        .filter(e => e.type === 'ERROR')
+        .map(e => e.message)
+        .join('\n');
+      alert(`Cannot export PDF due to validation errors:\n\n${errorMessages}`);
+      return;
+    }
+
+    // Show warnings if any
+    const warnings = validation.errors.filter(e => e.type === 'WARNING');
+    if (warnings.length > 0) {
+      const warningMessages = warnings.map(e => e.message).join('\n');
+      if (!confirm(`PDF export warnings:\n\n${warningMessages}\n\nContinue with export?`)) {
+        return;
+      }
+    }
+
     // 1. Get the hidden print content
     const printContent = document.getElementById('printable-content');
     if (!printContent) return;
@@ -109,6 +131,7 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
     setIsPreviewMode,
     getPageForRef,
     handleExportPDF,
+    validateBook: () => validateBookStructure(bookData),
   };
 
   return (
