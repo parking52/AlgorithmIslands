@@ -23,6 +23,8 @@ const page3Refs: Reference[] = [];
 const page4Refs: Reference[] = [];
 const page5Refs: Reference[] = [];
 const page6Refs: Reference[] = [];
+const page7Refs: Reference[] = [];
+const page8Refs: Reference[] = [];
 
 // ==========================================
 // GRIDS & TOPOGRAPHY
@@ -293,6 +295,60 @@ const addFlavor = (
 addFlavor(grid5, page5Refs, 581, [TerrainType.CHEST, TerrainType.COIN]);
 addFlavor(grid2, page2Refs, 285); // Default behavior
 
+// ==========================================
+// NEW PAGES FOR HUNT 9: The Sunsnake Dance
+// ==========================================
+
+// --- PAGE 7: Desert Dance Floor ---
+const grid7 = createGrid(TerrainType.SAND);
+addBorder(grid7, TerrainType.ROCK);
+// Dance starting positions
+grid7[2][2].terrain = TerrainType.START; grid7[2][2].label = "Even Start"; grid7[2][2].refId = "700"; // Even reference
+grid7[7][7].terrain = TerrainType.START; grid7[7][7].label = "Odd Start"; grid7[7][7].refId = "701"; // Odd reference
+// Dance path markers
+grid7[1][3].terrain = TerrainType.X_MARK; grid7[1][3].refId = "702"; // NORTH from even
+grid7[1][4].terrain = TerrainType.X_MARK; grid7[1][4].refId = "703"; // EAST from north
+grid7[1][5].terrain = TerrainType.X_MARK; grid7[1][5].refId = "704"; // EAST from east
+grid7[0][5].terrain = TerrainType.X_MARK; grid7[0][5].refId = "705"; // NORTH from east
+grid7[0][6].terrain = TerrainType.X_MARK; grid7[0][6].refId = "706"; // EAST from north (end even)
+
+// Odd path: SOUTH-E-E-S-E
+grid7[8][7].terrain = TerrainType.X_MARK; grid7[8][7].refId = "707"; // SOUTH from odd
+grid7[8][8].terrain = TerrainType.X_MARK; grid7[8][8].refId = "708"; // EAST from south
+grid7[8][9].terrain = TerrainType.X_MARK; grid7[8][9].refId = "709"; // EAST from east
+grid7[9][9].terrain = TerrainType.X_MARK; grid7[9][9].refId = "710"; // SOUTH from east
+grid7[9][8].terrain = TerrainType.X_MARK; grid7[9][8].refId = "711"; // EAST from south (end odd)
+
+// --- PAGE 8: Conditional Canyon ---
+const grid8 = createGrid(TerrainType.SAND);
+addBorder(grid8, TerrainType.ROCK);
+// River through middle
+for(let x=0; x<10; x++) { grid8[4][x].terrain = TerrainType.WATER; grid8[5][x].terrain = TerrainType.WATER; }
+// Bridge
+grid8[4][4].terrain = TerrainType.SAND; grid8[4][4].refId = "800"; // Even reference for double dance
+grid8[5][5].terrain = TerrainType.SAND; grid8[5][5].refId = "801"; // Odd reference (reminder)
+// Treasure at the end
+grid8[2][8].terrain = TerrainType.CHEST; grid8[2][8].refId = "802"; // Final treasure
+
+// Page 7 References (Dance Learning)
+page7Refs.push({ id: "700", type: "CLUE", content: "EVEN START: Perform Sunsnake Dance - NORTH-EAST-EAST-NORTH-EAST. Follow the X marks!" });
+page7Refs.push({ id: "701", type: "CLUE", content: "ODD START: Perform Sunsnake Dance - SOUTH-E-E-S-E. Follow the X marks!" });
+page7Refs.push({ id: "702", type: "POINTER", content: "Step 1 (NORTH): Continue the dance..." });
+page7Refs.push({ id: "703", type: "POINTER", content: "Step 2 (EAST): Continue the dance..." });
+page7Refs.push({ id: "704", type: "POINTER", content: "Step 3 (EAST): Continue the dance..." });
+page7Refs.push({ id: "705", type: "POINTER", content: "Step 4 (NORTH): Continue the dance..." });
+page7Refs.push({ id: "706", type: "TREASURE", content: "EVEN DANCE COMPLETE! You mastered the Sunsnake pattern." });
+page7Refs.push({ id: "707", type: "POINTER", content: "Step 1 (SOUTH): Continue the dance..." });
+page7Refs.push({ id: "708", type: "POINTER", content: "Step 2 (EAST): Continue the dance..." });
+page7Refs.push({ id: "709", type: "POINTER", content: "Step 3 (EAST): Continue the dance..." });
+page7Refs.push({ id: "710", type: "POINTER", content: "Step 4 (SOUTH): Continue the dance..." });
+page7Refs.push({ id: "711", type: "TREASURE", content: "ODD DANCE COMPLETE! You mastered the Sunsnake pattern." });
+
+// Page 8 References (Conditional Application)
+page8Refs.push({ id: "800", type: "CLUE", content: "EVEN REFERENCE: Perform Sunsnake Dance TWICE! First dance ends here, then do it again from the ODD reference (801)." });
+page8Refs.push({ id: "801", type: "CLUE", content: "ODD REFERENCE: Reminder - perform the SECOND Sunsnake Dance from here (SOUTH-E-E-S-E)." });
+page8Refs.push({ id: "802", type: "TREASURE", content: "CONDITIONAL MASTER! You applied the Sunsnake Dance correctly based on even/odd conditions." });
+
 export const STATIC_BOOK: BookData = {
   title: "The Pirate Archipelalgo",
   intro: "Pick a hunt, go to the starting reference ID, and follow the instructions to jump between pages until you find the treasure!",
@@ -369,6 +425,17 @@ export const STATIC_BOOK: BookData = {
         { refId: "411", description: "Found Shell on P4 (9,6).", expectedPage: 4 },
         { refId: "599", description: "Treasure P5.", expectedPage: 5 }
       ]
+    },
+    {
+      id: "hunt9", name: "9. The Sunsnake Dance", difficulty: "Hard", startRefId: "700",
+      description: "Master conditional functions with even/odd logic.", topic: "Conditional Logic", concept: "Functions with different behavior based on input parity.",
+      solutionPath: [
+        { refId: "700", description: "Learn Sunsnake Dance on P7 (even start)", expectedPage: 7 },
+        { refId: "706", description: "Complete even dance learning", expectedPage: 7 },
+        { refId: "800", description: "Apply on odd case (P8)", expectedPage: 8 },
+        { refId: "801", description: "Reminder: do it again from odd ref", expectedPage: 8 },
+        { refId: "802", description: "Complete double conditional dance", expectedPage: 8 }
+      ]
     }
   ],
   pages: [
@@ -378,5 +445,7 @@ export const STATIC_BOOK: BookData = {
     { pageNumber: 4, title: "Function Forest", grid: grid4, references: page4Refs },
     { pageNumber: 5, title: "Deep Archive", grid: grid5, references: page5Refs },
     { pageNumber: 6, title: "The Glittering Grotto", grid: grid6, references: page6Refs },
+    { pageNumber: 7, title: "Desert Dance Floor", grid: grid7, references: page7Refs },
+    { pageNumber: 8, title: "Conditional Canyon", grid: grid8, references: page8Refs },
   ]
 };
