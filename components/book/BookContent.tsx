@@ -45,11 +45,12 @@ export const BookContent: React.FC<BookContentProps> = ({ idPrefix }) => {
           <div className="mt-auto text-sm text-gray-400 font-mono">First Edition • Printed by React</div>
       </div>
 
-      {/* PAGE II: Merged Table of Contents & Curriculum */}
+{/* PAGE II: Captain's Log & Curriculum (Hunts 1-9) */}
       <div className="w-[210mm] h-[297mm] mx-auto bg-white p-[15mm] shadow-lg print:shadow-none print:w-full page-break border border-gray-200 flex flex-col mb-8 print:mb-0 print:border-none flex-shrink-0">
           <div className="text-center border-b-2 border-stone-800 pb-4 mb-4">
             <h2 className="font-pirate-title text-4xl text-stone-900">Captain's Log & Curriculum</h2>
             <p className="text-stone-500 font-serif italic text-sm mt-1">Map your course, learn the code, find the gold.</p>
+            <p className="text-stone-400 font-serif text-xs mt-2">Adventures 1-9</p>
           </div>
 
           <div className="flex-grow">
@@ -62,7 +63,7 @@ export const BookContent: React.FC<BookContentProps> = ({ idPrefix }) => {
                 </tr>
               </thead>
               <tbody>
-                {bookData.hunts.map((h, i) => (
+                {bookData.hunts.slice(0, 9).map((h, i) => (
                   <tr key={i} className="border-b border-stone-200">
                     <td className="py-3 px-2 align-top">
                       <div className="flex items-baseline gap-2">
@@ -104,7 +105,112 @@ export const BookContent: React.FC<BookContentProps> = ({ idPrefix }) => {
           </div>
 
           <ConceptSummary />
+      </div>
 
+      {/* PAGE III: Adventure Almanac (Hunts 10-20) */}
+      <div className="w-[210mm] h-[297mm] mx-auto bg-white p-[15mm] shadow-lg print:shadow-none print:w-full page-break border border-gray-200 flex flex-col mb-8 print:mb-0 print:border-none flex-shrink-0">
+          <div className="text-center border-b-2 border-stone-800 pb-4 mb-4">
+            <h2 className="font-pirate-title text-4xl text-stone-900">Adventure Almanac</h2>
+            <p className="text-stone-500 font-serif italic text-sm mt-1">Future quests await the bold explorer.</p>
+            <p className="text-stone-400 font-serif text-xs mt-2">Adventures 10-20</p>
+          </div>
+
+          <div className="flex-grow">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b-2 border-stone-800 text-stone-800">
+                  <th className="py-2 px-2 font-pirate-title w-[45%]">Adventure</th>
+                  <th className="py-2 px-2 font-mono font-bold text-center w-[15%]">Start</th>
+                  <th className="py-2 px-2 font-bold font-mono w-[40%]">Pedagogical Goal</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Array.from({ length: 11 }, (_, i) => {
+                  const huntNumber = i + 10;
+                  const hunt = bookData.hunts.find(h => h.id === `hunt${huntNumber}`);
+                  if (hunt) {
+                    // Real hunt (like hunt10)
+                    return (
+                      <tr key={i} className="border-b border-stone-200">
+                        <td className="py-3 px-2 align-top">
+                          <div className="flex items-baseline gap-2">
+                             <span className="font-bold font-mono text-stone-400 text-xs">#{huntNumber}</span>
+                             <span className="font-bold text-stone-900 text-lg leading-tight">{hunt.name.split('. ')[1]}</span>
+                          </div>
+                          <div className="text-stone-500 font-serif italic text-sm mt-1 pl-6 leading-tight">
+                            "{hunt.description}"
+                          </div>
+                        </td>
+
+                        <td className="py-3 px-2 align-top text-center">
+                          <div className="flex flex-col items-center">
+                            <span className="font-mono font-bold text-lg text-stone-900 leading-none">
+                              {hunt.startRefId}
+                            </span>
+                            <span className="text-[10px] text-stone-500 font-bold uppercase mt-1">
+                              Page {getPageForRef(hunt.startRefId)}
+                            </span>
+                          </div>
+                        </td>
+
+                        <td className="py-3 px-2 align-top">
+                          <div className="flex flex-col gap-1.5">
+                            <div className="flex items-center gap-1.5 text-blue-800 font-bold text-xs">
+                               <BrainCircuit size={14} />
+                               <span className="uppercase tracking-wide">{hunt.topic}</span>
+                            </div>
+                            <div className="flex items-start gap-1.5 text-stone-600 text-xs leading-snug">
+                               <Lightbulb size={14} className="flex-shrink-0 mt-0.5 text-amber-500" />
+                               {hunt.concept}
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  } else {
+                    // Placeholder hunt
+                    return (
+                      <tr key={i} className="border-b border-stone-100 bg-stone-50">
+                        <td className="py-3 px-2 align-top">
+                          <div className="flex items-baseline gap-2">
+                             <span className="font-bold font-mono text-stone-300 text-xs">#{huntNumber}</span>
+                             <span className="text-stone-400 text-lg leading-tight italic">Coming Soon</span>
+                          </div>
+                          <div className="text-stone-300 font-serif italic text-sm mt-1 pl-6 leading-tight">
+                            "Adventure awaits..."
+                          </div>
+                        </td>
+
+                        <td className="py-3 px-2 align-top text-center">
+                          <div className="flex flex-col items-center">
+                            <span className="font-mono text-stone-300 text-lg leading-none">
+                              TBD
+                            </span>
+                            <span className="text-[10px] text-stone-300 font-bold uppercase mt-1">
+                              Page ?
+                            </span>
+                          </div>
+                        </td>
+
+                        <td className="py-3 px-2 align-top">
+                          <div className="flex flex-col gap-1.5">
+                            <div className="flex items-center gap-1.5 text-stone-300 font-bold text-xs">
+                               <BrainCircuit size={14} />
+                               <span className="uppercase tracking-wide">TBD</span>
+                            </div>
+                            <div className="flex items-start gap-1.5 text-stone-300 text-xs leading-snug">
+                               <Lightbulb size={14} className="flex-shrink-0 mt-0.5" />
+                               Future algorithm concept
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  }
+                })}
+              </tbody>
+            </table>
+          </div>
       </div>
 
       {/* Dynamic Pages (Maps) */}

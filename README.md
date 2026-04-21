@@ -40,3 +40,13 @@ Before exporting PDF, the app validates:
 - Pages with no outbound refs are flagged
 
 Automated tests for this validation checklist should be added once a test framework is available.
+
+
+
+## Vision
+- Le format X.YY est-il le meilleur? Supportera-t-il XXX.YY ? A-t-on une autre option?
+- Quel ratio d'occupabilité de la carte doit-on viser? Doit-on rajouter des fausses pistes? Le faire programmatiquement a la fin?
+- Faut-il mieux organiser le support pour chaque hunt, pour que ce soit visuellement clair? Comment avoir une bonne separation et integration page/hunt dans le code?
+- Separation reference sur la carte, #2.AB, reference dans le codex,  !3.09 ? Il faut décider pour le long terme.
+- On peut simuler les Hunts sur l'app, mais cela rajoute de la tech debt ? A virer?
+- Devrait-on rajouter un index, qui résume ce que le lecteur a appris (les dances, etc..?)? Ce sera pratique pour les hunts "gros scope" / super mysteres.

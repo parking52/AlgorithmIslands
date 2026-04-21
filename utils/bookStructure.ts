@@ -43,9 +43,9 @@ export function createPageMetadata(bookData: BookData): PageMetadata[] {
       page.grid.forEach(row => {
         row.forEach(cell => {
           if (cell.refId) {
-            // Convert refId to page reference if it follows the pattern
-            // refId format: "101" = Page 1, Ref 01
-            const pageNum = Math.floor(parseInt(cell.refId) / 100);
+            // Parse refId in new format: "pageNumber.referenceNumber"
+            const [pageNumStr] = cell.refId.split('.');
+            const pageNum = parseInt(pageNumStr);
             if (pageNum > 0 && pageNum !== page.pageNumber) {
               pageRefIds.add(`page${pageNum}`);
             }
@@ -150,13 +150,84 @@ export function validateBookStructure(bookData: BookData): ValidationResult {
   const errors: ValidationError[] = [];
   const pageMap = new Map<number, typeof bookData.pages[0]>();
   const refMap = new Map<string, { page: number; ref: any }>();
+  const refIdsByPage = new Map<number, Set<string>>();
 
   // Build lookup maps
   bookData.pages.forEach(page => {
     pageMap.set(page.pageNumber, page);
+    refIdsByPage.set(page.pageNumber, new Set());
     page.references.forEach(ref => {
       refMap.set(ref.id, { page: page.pageNumber, ref });
+      refIdsByPage.get(page.pageNumber)?.add(ref.id);
     });
+  });
+
+  // Validate reference ID schema
+  const refIdPattern = /^\d+\.\d+$/;
+  bookData.pages.forEach(page => {
+    page.references.forEach(ref => {
+      if (!refIdPattern.test(ref.id)) {
+        errors.push({
+          type: 'ERROR',
+          code: 'INVALID_REF_ID_SCHEMA',
+          message: `Reference ID "${ref.id}" on page ${page.pageNumber} does not follow required schema "pageNumber.referenceNumber" (e.g., "1.01")`,
+          context: { pageId: `page${page.pageNumber}`, refId: ref.id }
+        });
+      } else {
+        // Check that the page number in the refId matches the actual page
+        const [refPageNum] = ref.id.split('.').map(Number);
+        if (refPageNum !== page.pageNumber) {
+          errors.push({
+            type: 'ERROR',
+            code: 'REF_ID_PAGE_MISMATCH',
+            message: `Reference ID "${ref.id}" on page ${page.pageNumber} has page number ${refPageNum} in its ID`,
+            context: { pageId: `page${page.pageNumber}`, refId: ref.id }
+          });
+        }
+      }
+    });
+
+    // Check for duplicate reference IDs on the same page
+    const pageRefIds = refIdsByPage.get(page.pageNumber);
+    if (pageRefIds) {
+      const duplicates = Array.from(pageRefIds).filter((refId, index, arr) => arr.indexOf(refId) !== index);
+      duplicates.forEach(duplicateRefId => {
+        errors.push({
+          type: 'ERROR',
+          code: 'DUPLICATE_REF_ID',
+          message: `Duplicate reference ID "${duplicateRefId}" found on page ${page.pageNumber}`,
+          context: { pageId: `page${page.pageNumber}`, refId: duplicateRefId }
+        });
+      });
+    }
+
+    // Validate grid cell refIds
+    if (page.grid) {
+      page.grid.forEach((row, rowIndex) => {
+        row.forEach((cell, colIndex) => {
+          if (cell.refId) {
+            if (!refIdPattern.test(cell.refId)) {
+              errors.push({
+                type: 'ERROR',
+                code: 'INVALID_GRID_REF_ID_SCHEMA',
+                message: `Grid cell at (${rowIndex},${colIndex}) on page ${page.pageNumber} has invalid refId "${cell.refId}" - must follow "pageNumber.referenceNumber" schema`,
+                context: { pageId: `page${page.pageNumber}`, refId: cell.refId, position: `${rowIndex},${colIndex}` }
+              });
+            } else {
+              const [refPageNum] = cell.refId.split('.').map(Number);
+              if (refPageNum !== page.pageNumber) {
+                errors.push({
+                  type: 'ERROR',
+                  code: 'GRID_REF_ID_PAGE_MISMATCH',
+                  message: `Grid cell refId "${cell.refId}" on page ${page.pageNumber} has page number ${refPageNum} in its ID`,
+                  context: { pageId: `page${page.pageNumber}`, refId: cell.refId, position: `${rowIndex},${colIndex}` }
+                });
+              }
+            }
+          }
+        });
+      });
+    }
   });
 
   // Validate hunts
