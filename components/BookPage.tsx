@@ -10,16 +10,18 @@ interface BookPageProps {
 
 export const BookPage: React.FC<BookPageProps> = ({ page, highlightedRefIds = [] }) => {
   // Filter refs for this page
-  const pageRefs = highlightedRefIds.filter(id => id.startsWith(page.pageNumber.toString()));
+  const pageRefs = highlightedRefIds.filter(
+    id => id.split('.')[0] === page.pageNumber.toString(),
+  );
 
   return (
     <div className="
-      w-[210mm] h-[297mm] mx-auto 
+      book-sheet mx-auto
       bg-white 
       p-[15mm] 
       shadow-lg my-8 
       print:shadow-none print:my-0 print:border-none
-      relative overflow-hidden
+      relative
       flex flex-col
       page-break
     ">
@@ -42,7 +44,7 @@ export const BookPage: React.FC<BookPageProps> = ({ page, highlightedRefIds = []
       )}
       
       {/* Reference Section */}
-      <div className="flex-grow overflow-hidden">
+      <div className="flex-grow">
         <ReferenceList 
           references={page.references} 
           highlightedIds={pageRefs}
@@ -50,7 +52,7 @@ export const BookPage: React.FC<BookPageProps> = ({ page, highlightedRefIds = []
       </div>
 
       {/* Footer */}
-      <div className="absolute bottom-4 left-0 w-full text-center text-[10px] text-gray-400 font-mono">
+      <div className="book-footer">
         Algorithm Treasure Hunt • Page {page.pageNumber}
       </div>
     </div>

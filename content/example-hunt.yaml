@@ -1,0 +1,20 @@
+# Human-authorable hunt source. Stable sourceId values survive page renumbering.
+hunts:
+  - id: hunt-example
+    name: "Example: The Two Bottles"
+    difficulty: Easy
+    startRefId: "1.01"
+    description: "Follow a short reference chain."
+    topic: Pointers
+    concept: "A printed address can refer to another entry."
+    mechanic: REFERENCE_CHAIN
+    steps:
+      - sourceId: two-bottles.start
+        refId: "1.01"
+        description: "Read the first bottle."
+        expectedPage: 1
+      - sourceId: two-bottles.destination
+        refId: "2.50"
+        description: "Follow the address to the second bottle."
+        expectedPage: 2
+

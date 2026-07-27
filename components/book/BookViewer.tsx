@@ -32,7 +32,7 @@ export const BookViewer: React.FC = () => {
              : 'flex-grow h-screen overflow-y-auto p-8'
           }
         `}>
-          <BookContent idPrefix="page-screen" />
+          <BookContent idPrefix="page-screen" showSimulationHighlights />
         </div>
       </div>
 
@@ -40,7 +40,20 @@ export const BookViewer: React.FC = () => {
           PRINT CONTENT SOURCE (Hidden always, accessed via DOM by handleExportPDF)
          ===================================================================================== */}
       <div id="printable-content" className="hidden">
-        <BookContent idPrefix="page-print" />
+        <div className="print-child-edition">
+          <BookContent
+            idPrefix="page-print-child"
+            showSimulationHighlights={false}
+            showSolutions={false}
+          />
+        </div>
+        <div className="print-adult-edition">
+          <BookContent
+            idPrefix="page-print-adult"
+            showSimulationHighlights={false}
+            showSolutions
+          />
+        </div>
       </div>
     </>
   );

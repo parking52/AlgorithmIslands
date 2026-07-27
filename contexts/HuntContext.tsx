@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { TreasureHunt } from '../types';
+import { getHuntSolutionPath } from '../domain/huntEngine';
 
 interface HuntContextType {
   activeHunt: TreasureHunt | null;
@@ -33,8 +34,9 @@ export const HuntProvider: React.FC<HuntProviderProps> = ({ children }) => {
     setCurrentStepIndex(0);
 
     // Automatically scroll to the starting page of the hunt
-    if (hunt.solutionPath.length > 0) {
-      const startPage = hunt.solutionPath[0].expectedPage;
+    const solutionPath = getHuntSolutionPath(hunt);
+    if (solutionPath.length > 0) {
+      const startPage = solutionPath[0].expectedPage;
       setTimeout(() => {
         const el = document.getElementById(`page-screen-${startPage}`);
         if (el) {
@@ -45,11 +47,12 @@ export const HuntProvider: React.FC<HuntProviderProps> = ({ children }) => {
   };
 
   const nextStep = () => {
-    if (activeHunt && currentStepIndex < activeHunt.solutionPath.length - 1) {
+    const solutionPath = activeHunt ? getHuntSolutionPath(activeHunt) : [];
+    if (activeHunt && currentStepIndex < solutionPath.length - 1) {
       const nextIndex = currentStepIndex + 1;
       setCurrentStepIndex(nextIndex);
 
-      const step = activeHunt.solutionPath[nextIndex];
+      const step = solutionPath[nextIndex];
       // Only scroll in screen mode
       const el = document.getElementById(`page-screen-${step.expectedPage}`);
       if (el) {
@@ -63,7 +66,7 @@ export const HuntProvider: React.FC<HuntProviderProps> = ({ children }) => {
       const prevIndex = currentStepIndex - 1;
       setCurrentStepIndex(prevIndex);
 
-      const step = activeHunt.solutionPath[prevIndex];
+      const step = getHuntSolutionPath(activeHunt)[prevIndex];
       const el = document.getElementById(`page-screen-${step.expectedPage}`);
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' });
@@ -73,7 +76,7 @@ export const HuntProvider: React.FC<HuntProviderProps> = ({ children }) => {
 
   // Get all ref IDs up to current step for highlighting
   const activeRefIds = activeHunt && currentStepIndex >= 0
-    ? activeHunt.solutionPath.slice(0, currentStepIndex + 1).map(step => step.refId)
+    ? getHuntSolutionPath(activeHunt).slice(0, currentStepIndex + 1).map(step => step.refId)
     : [];
 
   const value: HuntContextType = {

@@ -18,7 +18,8 @@ export enum TerrainType {
 export interface MapCell {
   terrain: TerrainType;
   label?: string; // Visible label (e.g. "A1")
-  refId?: string; // Hidden ref ID at this location
+  refId?: string; // Printed address at this location
+  sourceId?: string; // Stable authoring ID, independent of printed layout
 }
 
 // Helper to define grid easier
@@ -26,7 +27,8 @@ export type GridRow = MapCell[];
 export type GridData = GridRow[];
 
 export interface Reference {
-  id: string; // e.g. "101" for Page 1, Ref 01
+  id: string; // Printed address, e.g. "1.01"
+  sourceId?: string; // Stable authoring ID, e.g. "sandy-shores.dock"
   type: 'CLUE' | 'PUZZLE' | 'TREASURE' | 'POINTER' | 'DECOY' | 'COIN';
   content: string; 
   value?: number; 
@@ -50,9 +52,44 @@ export interface PageMetadata {
 }
 
 export interface HuntStep {
+  sourceId?: string;
   refId: string;
   description: string;
   expectedPage: number;
+}
+
+export type HuntMechanic =
+  | 'REFERENCE_CHAIN'
+  | 'GRID_MOVEMENT'
+  | 'AGGREGATION'
+  | 'FILTER_AND_REDUCE'
+  | 'BINARY_SEARCH'
+  | 'FUNCTION_CALL'
+  | 'SET_MEMBERSHIP'
+  | 'ITERATION'
+  | 'CONDITIONAL'
+  | 'INDIRECTION'
+  | 'TRANSFORMATION'
+  | 'PARALLEL';
+
+export type HuntInstruction =
+  | { kind: 'GOTO'; targetNodeId: string }
+  | { kind: 'FINISH' };
+
+export interface HuntProgramNode extends HuntStep {
+  sourceId: string;
+  instruction: HuntInstruction;
+}
+
+export interface HuntProgram {
+  mechanic: HuntMechanic;
+  startNodeId: string;
+  nodes: Record<string, HuntProgramNode>;
+  maxSteps?: number;
+  parallelBranches?: {
+    id: string;
+    nodeIds: string[];
+  }[];
 }
 
 export interface TreasureHunt {
@@ -61,10 +98,23 @@ export interface TreasureHunt {
   difficulty: 'Easy' | 'Medium' | 'Hard';
   startRefId: string;
   description: string;
-  solutionPath: HuntStep[];
+  program: HuntProgram;
   // Pedagogical info
   topic: string; // e.g. "Pointers"
   concept: string; // e.g. "Teaches how memory works..."
+}
+
+export interface BookNight {
+  id: string;
+  number: number;
+  title: string;
+  law: string;
+  concepts: string[];
+  huntIds: string[];
+  duskLetter: string;
+  dreamChallenge: string;
+  dawnQuestion: string;
+  sigil: string;
 }
 
 // NEW: Structured Hunt Abstraction (Non-breaking extension)
@@ -81,6 +131,9 @@ export interface StructuredHunt {
 export interface BookData {
   title: string;
   intro: string;
+  subtitle: string;
+  ageRange: string;
+  nights: BookNight[];
   hunts: TreasureHunt[];
   pages: PageData[];
 }
@@ -112,6 +165,8 @@ export interface ValidationError {
     huntId?: string;
     pageId?: string;
     refId?: string;
+    position?: string;
+    nodeId?: string;
   };
 }
 
