@@ -11,17 +11,17 @@ export const NightChapterPage: React.FC<NightChapterPageProps> = ({ night, hunts
     <div className="night-number">Night {night.number}</div>
     <h2 className="font-pirate-title text-5xl text-center mt-4 mb-2">{night.title}</h2>
     <p className="font-pirate-text text-center text-xl italic mb-8">
-      The law of tonight: “{night.law}”
+      Morrow’s trick: “{night.law}”
     </p>
 
     <div className="border-y-2 border-stone-800 py-8 my-4">
-      <h3 className="font-pirate-title text-2xl mb-3">A blot at dusk</h3>
+      <h3 className="font-pirate-title text-2xl mb-3">Tonight’s dream</h3>
       <p className="font-pirate-text text-xl leading-relaxed">{night.duskLetter}</p>
     </div>
 
     <div className="grid grid-cols-2 gap-8 mt-7">
       <div>
-        <h3 className="font-pirate-title text-xl mb-3">Tonight’s voyages</h3>
+        <h3 className="font-pirate-title text-xl mb-3">Choose your voyage</h3>
         <ol className="space-y-3">
           {hunts.map(hunt => (
             <li key={hunt.id} className="border-l-4 border-stone-800 pl-3">
@@ -34,11 +34,15 @@ export const NightChapterPage: React.FC<NightChapterPageProps> = ({ night, hunts
       </div>
 
       <div>
-        <h3 className="font-pirate-title text-xl mb-3">Morrow’s challenge</h3>
+        <h3 className="font-pirate-title text-xl mb-3">Your mission</h3>
         <p className="font-pirate-text text-lg leading-relaxed">{night.dreamChallenge}</p>
         <div className="mt-6">
-          <h4 className="font-bold uppercase tracking-wide text-sm mb-2">Ideas hidden tonight</h4>
-          <p className="font-pirate-text text-lg">{night.concepts.join(' • ')}</p>
+          <h4 className="font-bold uppercase tracking-wide text-sm mb-2">Pencil check</h4>
+          <div className="space-y-3 font-pirate-text text-lg">
+            <p>□ I found the starting reference.</p>
+            <p>□ I marked each clue after using it.</p>
+            <p>□ I can tell Morrow how I found the treasure.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -57,4 +61,3 @@ export const NightChapterPage: React.FC<NightChapterPageProps> = ({ night, hunts
     <div className="book-footer">The Pirate Archipelalgo • Night {night.number}</div>
   </section>
 );
-

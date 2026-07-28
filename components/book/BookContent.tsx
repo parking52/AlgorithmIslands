@@ -41,8 +41,9 @@ export const BookContent: React.FC<BookContentProps> = ({
           <div className="w-24 h-1 bg-stone-300 mb-8" />
 
           <p className="text-xl font-serif text-stone-700 mb-8 max-w-xl leading-relaxed">
-            This book is not just a collection of puzzles; it is a computer science course disguised as a pirate adventure.
-            Each treasure hunt is carefully designed to teach a fundamental algorithm or programming concept with only paper and a pencil.
+            When the lights go out, Morrow the Eight-Handed Cartographer slips through a blot of ink.
+            His islands are vanishing into the Blank Tide, and he cannot save them alone.
+            Keep a pencil close. Tonight, he may knock inside your pillow.
           </p>
 
           <div className="mt-20 text-center w-full px-12">
@@ -56,6 +57,8 @@ export const BookContent: React.FC<BookContentProps> = ({
       </div>
 
 {/* PAGE II: Captain's Log & Curriculum (Hunts 1-9) */}
+      {(showSimulationHighlights || showSolutions) && (
+        <>
       <div className="book-sheet w-[210mm] h-[297mm] mx-auto bg-white p-[15mm] shadow-lg print:shadow-none page-break border border-gray-200 flex flex-col mb-8 print:mb-0 print:border-none flex-shrink-0">
           <div className="text-center border-b-2 border-stone-800 pb-4 mb-4">
             <h2 className="font-pirate-title text-4xl text-stone-900">Captain's Log & Curriculum</h2>
@@ -222,6 +225,8 @@ export const BookContent: React.FC<BookContentProps> = ({
             </table>
           </div>
       </div>
+        </>
+      )}
 
       {/* Night chapter openings */}
       {bookData.nights.map(night => (

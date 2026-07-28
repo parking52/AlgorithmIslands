@@ -18,6 +18,22 @@ describe('book structure', () => {
     });
   });
 
+  it('unwinds The Dream Below the Dream in last-in, first-out order', () => {
+    const hunt = STATIC_BOOK.hunts.find(candidate => candidate.id === 'hunt13');
+    expect(hunt).toBeTruthy();
+
+    const result = runHuntProgram(hunt!);
+    expect(result.path.map(step => step.refId)).toEqual([
+      '11.00',
+      '3.11',
+      '7.31',
+      '5.13',
+      '7.32',
+      '3.12',
+      '11.70',
+    ]);
+  });
+
   it('detects duplicate printed reference addresses', () => {
     const firstPage = STATIC_BOOK.pages[0];
     const duplicate = firstPage.references[0];
@@ -63,4 +79,3 @@ describe('book structure', () => {
     expect(result.errors.some(error => error.code === 'UNSOLVABLE_HUNT')).toBe(true);
   });
 });
-

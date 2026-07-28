@@ -29,6 +29,7 @@ const page7Refs: Reference[] = [];
 const page8Refs: Reference[] = [];
 const page9Refs: Reference[] = [];
 const page10Refs: Reference[] = [];
+const page11Refs: Reference[] = [];
 
 // ==========================================
 // GRIDS & TOPOGRAPHY
@@ -396,6 +397,43 @@ grid10[6][6].terrain = TerrainType.ROCK; grid10[6][6].label = "Rock 6";
 grid10[6][7].terrain = TerrainType.ROCK; grid10[6][7].label = "Rock 7";
 grid10[6][8].terrain = TerrainType.ROCK; grid10[6][8].label = "Rock 8";
 
+// Hunt 13: The Dream Below the Dream (Call Stack)
+page11Refs.push({
+  id: "11.00",
+  type: "CLUE",
+  content: "Morrow's hat spins at the edge of a hole in the paper. His voice calls from below: 'Save the way home before you follow!' PUSH Ref 11.70 into Box 1 of the Return Stack. Then jump to Ref 3.11.",
+});
+page3Refs.push({
+  id: "3.11",
+  type: "POINTER",
+  content: "You land in a jungle growing upside down. A smaller trapdoor creaks open beneath your feet. PUSH Ref 3.12 into the next empty stack box. Then jump to Ref 7.31.",
+});
+page7Refs.push({
+  id: "7.31",
+  type: "POINTER",
+  content: "You fall into a tiny copy of your own bedroom. From a crack under the bed, Morrow whispers, 'One dream deeper!' PUSH Ref 7.32 into the next empty stack box. Then jump to Ref 5.13.",
+});
+page5Refs.push({
+  id: "5.13",
+  type: "PUZZLE",
+  content: "At the bottom dream, Morrow is hanging from the minute hand of a giant clock. You pull him free. 'Please tell me you saved the way home!' POP the stack: cross out the highest filled box and follow its reference.",
+});
+page7Refs.push({
+  id: "7.32",
+  type: "POINTER",
+  content: "The tiny bedroom folds shut like a book. POP the stack again: cross out the highest filled box and follow its reference.",
+});
+page3Refs.push({
+  id: "3.12",
+  type: "POINTER",
+  content: "The upside-down jungle turns right-side up and vanishes. One return remains. POP the stack again: cross out the highest filled box and follow its reference.",
+});
+page11Refs.push({
+  id: "11.70",
+  type: "TREASURE",
+  content: "WHUMP! You and Morrow tumble safely onto the bed. He checks the crossed-out stack, then bows all eight arms. 'You did not merely remember the way in. You remembered the way home—in exactly the right order.'",
+});
+
 
 
 
@@ -407,8 +445,8 @@ export const STATIC_BOOK: BookData = {
   nights: BOOK_NIGHTS,
   hunts: [
     {
-      id: "hunt1", name: "1. The Inter-Island Pointers", difficulty: "Easy", startRefId: "1.01",
-      description: "Follow the trail across 3 different islands.", topic: "Pointers", concept: "Following references.",
+      id: "hunt1", name: "1. The Torn Map", difficulty: "Easy", startRefId: "1.01",
+      description: "A torn note sends you racing between three islands.", topic: "Pointers", concept: "Following references.",
       program: createLinearProgram("hunt1", "REFERENCE_CHAIN", [
         { sourceId: "pointers.first-map-piece", refId: "1.01", description: "Start with the first map piece.", expectedPage: 1 },
         { sourceId: "pointers.ancient-ruin", refId: "2.50", description: "Follow the pointer to the Ancient Ruin.", expectedPage: 2 },
@@ -417,8 +455,8 @@ export const STATIC_BOOK: BookData = {
       ])
     },
     {
-      id: "hunt2", name: "2. The Border Patrol", difficulty: "Medium", startRefId: "2.10",
-      description: "Execute a loop.", topic: "Loops", concept: "Iteration until condition met.",
+      id: "hunt2", name: "2. Race Around the Shore", difficulty: "Medium", startRefId: "2.10",
+      description: "Carry a warning along the shore before the storm arrives.", topic: "Loops", concept: "Iteration until condition met.",
       program: createLinearProgram("hunt2", "GRID_MOVEMENT", [
         { sourceId: "border-patrol.briefing", refId: "2.10", description: "Read the patrol briefing.", expectedPage: 2 },
         { sourceId: "border-patrol.dock", refId: "1.05", description: "Begin the repeated movement rule at the dock.", expectedPage: 1 },
@@ -429,16 +467,16 @@ export const STATIC_BOOK: BookData = {
       ])
     },
     {
-      id: "hunt3", name: "3. The Global Sum", difficulty: "Hard", startRefId: "1.50",
-      description: "Sum items.", topic: "Distributed Computing", concept: "Aggregating data.",
+      id: "hunt3", name: "3. The Six-Gem Secret", difficulty: "Hard", startRefId: "1.50",
+      description: "Count scattered gems and turn their total into a hiding place.", topic: "Distributed Computing", concept: "Aggregating data.",
       program: createLinearProgram("hunt3", "AGGREGATION", [
         { sourceId: "global-sum.skull-rock", refId: "1.50", description: "Read the aggregation rule.", expectedPage: 1 },
         { sourceId: "global-sum.gem-mine", refId: "5.06", description: "Use the total of six gems to find the mine.", expectedPage: 5 },
       ])
     },
     {
-      id: "hunt4", name: "4. The Merchant's Quest", difficulty: "Medium", startRefId: "1.90",
-      description: "Find the square of coins on P1.", topic: "Geometry", concept: "Pattern recognition & Sum.",
+      id: "hunt4", name: "4. Three Coins for the Merchant", difficulty: "Medium", startRefId: "1.90",
+      description: "Find the only three coins that fit the merchant's strange lock.", topic: "Geometry", concept: "Pattern recognition & Sum.",
       program: createLinearProgram("hunt4", "FILTER_AND_REDUCE", [
         { sourceId: "merchant.shop", refId: "1.90", description: "Read the merchant's spatial filter.", expectedPage: 1 },
         { sourceId: "merchant.square-coin-a", refId: "1.66", description: "Collect the first matching coin.", expectedPage: 1 },
@@ -448,8 +486,8 @@ export const STATIC_BOOK: BookData = {
       ])
     },
     {
-      id: "hunt5", name: "5. The Binary Beach", difficulty: "Hard", startRefId: "5.40",
-      description: "Check chests on P5 using hints from other pages.", topic: "Binary Search", concept: "O(log n) search.",
+      id: "hunt5", name: "5. Seven Chests and One Wave", difficulty: "Hard", startRefId: "5.40",
+      description: "Open the right chest before the black wave reaches the beach.", topic: "Binary Search", concept: "O(log n) search.",
       program: createLinearProgram("hunt5", "BINARY_SEARCH", [
         { refId: "5.40", description: "Start Middle P5. Go P4.", expectedPage: 5 },
         { refId: "4.40", description: "Hint: LOWER.", expectedPage: 4 },
@@ -460,7 +498,7 @@ export const STATIC_BOOK: BookData = {
     },
     {
       id: "hunt6", name: "6. The Monkey Dance", difficulty: "Medium", startRefId: "2.60",
-      description: "Pattern: N-N-E-E-S.", topic: "Functions", concept: "Reusing code patterns.",
+      description: "Learn one secret dance and use it in two faraway places.", topic: "Functions", concept: "Reusing code patterns.",
       program: createLinearProgram("hunt6", "FUNCTION_CALL", [
         { refId: "2.60", description: "Start P2. Dance.", expectedPage: 2 },
         { refId: "4.50", description: "Learn and name MONKEY_DANCE.", expectedPage: 4 },
@@ -470,8 +508,8 @@ export const STATIC_BOOK: BookData = {
       ])
     },
     {
-      id: "hunt7", name: "7. The Grotto of Uniqueness", difficulty: "Medium", startRefId: "3.90",
-      description: "Find the path with unique coin values.", topic: "Sets / Hashing", concept: "Detecting duplicates.",
+      id: "hunt7", name: "7. The No-Twins Grotto", difficulty: "Medium", startRefId: "3.90",
+      description: "Choose the cave path where no coin number appears twice.", topic: "Sets / Hashing", concept: "Detecting duplicates.",
       program: createLinearProgram("hunt7", "SET_MEMBERSHIP", [
         { refId: "3.90", description: "Start P3 Quest.", expectedPage: 3 },
         { refId: "3.66", description: "Find Cave P3.", expectedPage: 3 },
@@ -482,7 +520,7 @@ export const STATIC_BOOK: BookData = {
     },
     {
       id: "hunt8", name: "8. The Migrating Shell", difficulty: "Hard", startRefId: "1.00",
-      description: "Track the moving shell (i++).", topic: "Iteration", concept: "Variable dependent on index.",
+      description: "Catch a shell that jumps whenever you turn the page.", topic: "Iteration", concept: "Variable dependent on index.",
       program: createLinearProgram("hunt8", "ITERATION", [
         { refId: "1.00", description: "Start P1 Clue.", expectedPage: 1 },
         { refId: "4.11", description: "Found the shell at column 6 after four iterations.", expectedPage: 4 },
@@ -491,7 +529,7 @@ export const STATIC_BOOK: BookData = {
     },
     {
       id: "hunt9", name: "9. The Sunsnake Dance", difficulty: "Hard", startRefId: "7.00",
-      description: "Master conditional functions with even/odd logic.", topic: "Conditional Logic", concept: "Functions with different behavior based on input parity.",
+      description: "Choose the right dance before the two Sunsnakes tie you in a knot.", topic: "Conditional Logic", concept: "Functions with different behavior based on input parity.",
       program: createLinearProgram("hunt9", "CONDITIONAL", [
         { sourceId: "sunsnake.even-start", refId: "7.00", description: "Perform the even Sunsnake dance.", expectedPage: 7 },
         { sourceId: "sunsnake.even-landing", refId: "7.07", description: "Learn the odd variation.", expectedPage: 7 },
@@ -501,8 +539,8 @@ export const STATIC_BOOK: BookData = {
       ])
     },
     {
-      id: "hunt10", name: "10. The Pointer Oracle", difficulty: "Medium", startRefId: "8.00",
-      description: "Learn pointer indirection with ! and !!.", topic: "Pointers", concept: "Resolve a reference to a value, then resolve the pointer again.",
+      id: "hunt10", name: "10. The Parrot in the Map", difficulty: "Medium", startRefId: "8.00",
+      description: "Follow a mark that points to a place instead of a note.", topic: "Pointers", concept: "Resolve a reference to a value, then resolve the pointer again.",
       program: createLinearProgram("hunt10", "INDIRECTION", [
         { sourceId: "pointer-oracle.rule", refId: "8.00", description: "Read the map-location indirection rule.", expectedPage: 8 },
         { sourceId: "pointer-oracle.first-location", refId: "4.03", description: "Resolve #8.22 to map column 4, row 03.", expectedPage: 4 },
@@ -511,8 +549,8 @@ export const STATIC_BOOK: BookData = {
       ])
     },
     {
-      id: "hunt11", name: "11. The Offset Oracle", difficulty: "Medium", startRefId: "9.12",
-      description: "Apply +10 offset to all references.", topic: "Transformation/Offset", concept: "Applying mathematical transformations to data.",
+      id: "hunt11", name: "11. The Ten-Step Oracle", difficulty: "Medium", startRefId: "9.12",
+      description: "The Oracle has moved every hiding place exactly ten steps.", topic: "Transformation/Offset", concept: "Applying mathematical transformations to data.",
       program: createLinearProgram("hunt11", "TRANSFORMATION", [
         { sourceId: "offset-oracle.rule", refId: "9.12", description: "Learn the +10 address transformation.", expectedPage: 9 },
         { sourceId: "offset-oracle.first-shift", refId: "9.10", description: "Transform 9.00 into 9.10.", expectedPage: 9 },
@@ -522,8 +560,8 @@ export const STATIC_BOOK: BookData = {
       ])
     },
     {
-      id: "hunt12", name: "12. The Parallel Processors", difficulty: "Hard", startRefId: "10.00",
-      description: "Run multiple workers at once and combine their outputs.", topic: "Parallel Computing", concept: "Splitting work into concurrent tasks and aggregating results.",
+      id: "hunt12", name: "12. The Two-Monkey Race", difficulty: "Hard", startRefId: "10.00",
+      description: "Guide two monkeys at once, then join the numbers they bring back.", topic: "Parallel Computing", concept: "Splitting work into concurrent tasks and aggregating results.",
       program: {
         ...createLinearProgram("hunt12", "PARALLEL", [
           { sourceId: "parallel.briefing", refId: "10.00", description: "Launch both independent walkers.", expectedPage: 10 },
@@ -536,6 +574,19 @@ export const STATIC_BOOK: BookData = {
           { id: "walker-b", nodeIds: ["parallel.worker-b"] },
         ],
       }
+    },
+    {
+      id: "hunt13", name: "13. The Dream Below the Dream", difficulty: "Hard", startRefId: "11.00",
+      description: "Follow Morrow through three dreams—and write down how to get home.", topic: "Call Stack", concept: "Last in, first out; nested calls and return addresses.",
+      program: createLinearProgram("hunt13", "CALL_STACK", [
+        { sourceId: "dream-stack.first-door", refId: "11.00", description: "Push 11.70, then enter the first dream.", expectedPage: 11 },
+        { sourceId: "dream-stack.second-door", refId: "3.11", description: "Push 3.12, then enter the second dream.", expectedPage: 3 },
+        { sourceId: "dream-stack.third-door", refId: "7.31", description: "Push 7.32, then enter the deepest dream.", expectedPage: 7 },
+        { sourceId: "dream-stack.rescue", refId: "5.13", description: "Rescue Morrow and pop 7.32.", expectedPage: 5 },
+        { sourceId: "dream-stack.first-return", refId: "7.32", description: "Pop 3.12.", expectedPage: 7 },
+        { sourceId: "dream-stack.second-return", refId: "3.12", description: "Pop 11.70.", expectedPage: 3 },
+        { sourceId: "dream-stack.home", refId: "11.70", description: "Return home with Morrow.", expectedPage: 11 },
+      ])
     }
   ],
   pages: [
@@ -549,5 +600,16 @@ export const STATIC_BOOK: BookData = {
     { pageNumber: 8, title: "Pointer Canyon", grid: grid8, references: page8Refs },
     { pageNumber: 9, title: "Adventure Reference Page", grid: grid9, references: page9Refs },
     { pageNumber: 10, title: "Parallel Processors", grid: grid10, references: page10Refs },
+    {
+      pageNumber: 11,
+      title: "The Return Stack",
+      worksheet: {
+        kind: "STACK",
+        title: "Morrow's Return Stack",
+        instructions: "Every dream has a door home. Before you jump through a new door, write the promised return reference in the next empty box. At the deepest dream, come home by crossing out the highest filled box first.",
+        slots: 3,
+      },
+      references: page11Refs,
+    },
   ]
 };

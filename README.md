@@ -106,8 +106,19 @@ The eight-night progression is:
 4. conditionals and predicates;
 5. sets, filtering, and aggregation;
 6. ordered data and binary search;
-7. indirection and transformations;
+7. indirection, transformations, and the call stack;
 8. parallel work, merging, and debugging.
 
 Each night contains a dusk story, Morrow’s challenge, one or more hunts, a dawn
 reflection, and a sigil for the final mystery.
+
+### Centrepiece paper hunt
+
+Night Seven now includes **The Dream Below the Dream**. The child follows Morrow
+through three nested dreams, writing each promised return address into a printed
+stack. At the deepest level the outward trail disappears. Escaping requires
+crossing out and following the saved addresses in last-in, first-out order.
+
+This is deliberately not explained to the child as a “call stack” before play.
+The physical need comes first; the adult/editor answer guide supplies the
+computer-science name afterward.

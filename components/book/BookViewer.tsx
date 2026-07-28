@@ -32,7 +32,10 @@ export const BookViewer: React.FC = () => {
              : 'flex-grow h-screen overflow-y-auto p-8'
           }
         `}>
-          <BookContent idPrefix="page-screen" showSimulationHighlights />
+          <BookContent
+            idPrefix="page-screen"
+            showSimulationHighlights={!isPreviewMode}
+          />
         </div>
       </div>
 

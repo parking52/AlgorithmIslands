@@ -30,6 +30,7 @@ const huntSourceSchema = z.object({
     'CONDITIONAL',
     'INDIRECTION',
     'TRANSFORMATION',
+    'CALL_STACK',
     'PARALLEL',
   ]),
   steps: z.array(stepSchema).min(1),
@@ -61,4 +62,3 @@ export function getHuntSourceJsonSchema() {
     target: 'draft-2020-12',
   });
 }
-

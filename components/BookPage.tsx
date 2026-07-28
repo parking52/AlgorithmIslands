@@ -2,6 +2,7 @@ import React from 'react';
 import { PageData } from '../types';
 import { MapGrid } from './MapGrid';
 import { ReferenceList } from './ReferenceList';
+import { StackWorksheet } from './book/StackWorksheet';
 
 interface BookPageProps {
   page: PageData;
@@ -41,6 +42,14 @@ export const BookPage: React.FC<BookPageProps> = ({ page, highlightedRefIds = []
             highlightedRefs={pageRefs}
           />
         </div>
+      )}
+
+      {page.worksheet?.kind === 'STACK' && (
+        <StackWorksheet
+          title={page.worksheet.title}
+          instructions={page.worksheet.instructions}
+          slots={page.worksheet.slots}
+        />
       )}
       
       {/* Reference Section */}

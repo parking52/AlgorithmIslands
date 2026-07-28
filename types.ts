@@ -38,6 +38,12 @@ export interface PageData {
   pageNumber: number;
   title: string;
   grid?: GridData; // Optional, some pages might just be reference lists
+  worksheet?: {
+    kind: 'STACK';
+    title: string;
+    instructions: string;
+    slots: number;
+  };
   references: Reference[];
 }
 
@@ -70,6 +76,7 @@ export type HuntMechanic =
   | 'CONDITIONAL'
   | 'INDIRECTION'
   | 'TRANSFORMATION'
+  | 'CALL_STACK'
   | 'PARALLEL';
 
 export type HuntInstruction =
