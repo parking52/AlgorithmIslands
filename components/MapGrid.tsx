@@ -97,10 +97,23 @@ export const MapGrid: React.FC<MapGridProps> = ({ grid, title, activePath = [], 
           </div>
         </div>
         
-        {/* Grid Container */}
-        <div className="grid grid-cols-10 gap-0 border-2 border-stone-800 bg-amber-50/50 select-none relative w-full aspect-square shadow-inner">
+        <div className="text-center font-mono text-[9px] mb-1">
+          Coordinates are written as column.row. Both axes begin at zero.
+        </div>
+
+        {/* Grid Container with zero-based coordinate axes */}
+        <div className="grid grid-cols-[18px_repeat(10,minmax(0,1fr))] gap-0 border-2 border-stone-800 bg-amber-50/50 select-none relative w-full shadow-inner">
+          <div className="coordinate-axis-cell" aria-hidden="true" />
+          {Array.from({ length: 10 }, (_, columnIndex) => (
+            <div className="coordinate-axis-cell" key={`column-${columnIndex}`}>
+              {columnIndex}
+            </div>
+          ))}
           {grid.map((row, rowIndex) => (
             <React.Fragment key={`row-${rowIndex}`}>
+              <div className="coordinate-axis-cell">
+                {String(rowIndex).padStart(2, '0')}
+              </div>
               {row.map((cell, colIndex) => {
                 const isHighlightedRef = cell.refId && highlightedRefs.includes(cell.refId);
                 const isOnPath = isPath(colIndex, rowIndex);
@@ -110,7 +123,7 @@ export const MapGrid: React.FC<MapGridProps> = ({ grid, title, activePath = [], 
                     key={`${rowIndex}-${colIndex}`}
                     className={`
                       relative border-[0.5px] border-stone-300/50 print:border-stone-400/30
-                      flex items-center justify-center
+                      flex items-center justify-center aspect-square
                       ${getCellStyles(cell.terrain, colIndex, rowIndex)}
                       ${isHighlightedRef ? 'ring-2 ring-red-500 z-10 bg-yellow-100/50' : ''}
                     `}
@@ -125,7 +138,7 @@ export const MapGrid: React.FC<MapGridProps> = ({ grid, title, activePath = [], 
                     {/* Reference ID overlay */}
                     {cell.refId && (
                       <span className={`
-                        absolute bottom-0.5 right-0.5 text-[8px] px-0.5 leading-none font-mono
+                        absolute bottom-0.5 right-0.5 text-[9px] px-0.5 leading-none font-mono
                         ${isHighlightedRef ? 'text-red-700 font-bold' : 'text-stone-500'}
                       `}>
                         {cell.refId}
@@ -134,7 +147,7 @@ export const MapGrid: React.FC<MapGridProps> = ({ grid, title, activePath = [], 
                     
                     {/* Label */}
                     {cell.label && (
-                       <span className="absolute top-0 left-0 text-[6px] text-stone-900 font-bold p-0.5 leading-none bg-white/60 backdrop-blur-[1px] rounded-br-sm border-r border-b border-stone-200">
+                       <span className="absolute top-0 left-0 text-[8px] text-stone-900 font-bold p-0.5 leading-none bg-white/80 rounded-br-sm border-r border-b border-stone-200">
                         {cell.label}
                        </span>
                     )}

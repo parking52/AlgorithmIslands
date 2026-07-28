@@ -1,6 +1,7 @@
 import React from 'react';
 import { useBook, useHunt } from '../../contexts';
 import { BookOpen, PlayCircle, Map, ArrowRight, FileDown, Eye } from 'lucide-react';
+import { getHuntSolutionPath } from '../../domain/huntEngine';
 
 export const HuntControls: React.FC = () => {
   const { bookData, handleExportPDF, setIsPreviewMode } = useBook();
@@ -24,8 +25,11 @@ export const HuntControls: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-2 gap-2 mb-4">
-          <button onClick={handleExportPDF} className="col-span-2 bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2 font-bold shadow-sm text-sm">
-            <FileDown size={18} /> Export PDF
+          <button onClick={() => handleExportPDF('child')} className="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2 font-bold shadow-sm text-sm">
+            <FileDown size={18} /> Child PDF
+          </button>
+          <button onClick={() => handleExportPDF('adult')} className="bg-stone-700 text-white p-3 rounded-lg hover:bg-stone-800 flex items-center justify-center gap-2 font-bold shadow-sm text-sm">
+            <FileDown size={18} /> Adult PDF
           </button>
           <button onClick={togglePreview} className="col-span-2 bg-gray-700 text-white p-2 rounded-lg hover:bg-gray-800 flex items-center justify-center gap-2 font-bold shadow-sm text-xs">
             <Eye size={18} /> Toggle Preview Mode
@@ -47,6 +51,7 @@ export const HuntControls: React.FC = () => {
         <div className="space-y-3">
           {bookData.hunts.map((hunt) => {
             const isActive = activeHunt?.id === hunt.id;
+            const solutionPath = getHuntSolutionPath(hunt);
             return (
               <div key={hunt.id} className={`border rounded-lg p-3 transition-colors ${isActive ? 'bg-yellow-50 border-yellow-400 ring-1 ring-yellow-400' : 'bg-white border-gray-200 hover:border-gray-300'}`}>
                 <div className="flex justify-between items-center mb-2">
@@ -63,24 +68,24 @@ export const HuntControls: React.FC = () => {
                 ) : (
                   <div className="bg-white rounded border border-yellow-200 p-2 shadow-sm">
                     <div className="flex items-center justify-between mb-2 pb-2 border-b border-gray-100">
-                      <span className="text-xs font-bold text-amber-800">Step {currentStepIndex + 1} / {hunt.solutionPath.length}</span>
+                      <span className="text-xs font-bold text-amber-800">Step {currentStepIndex + 1} / {solutionPath.length}</span>
                       <div className="flex gap-1">
                         <button onClick={prevStep} disabled={currentStepIndex <= 0} className="p-1 hover:bg-gray-100 rounded disabled:opacity-30"><Map size={14} className="rotate-180" /></button>
-                        <button onClick={nextStep} disabled={currentStepIndex >= hunt.solutionPath.length - 1} className="p-1 hover:bg-gray-100 rounded disabled:opacity-30"><Map size={14} /></button>
+                        <button onClick={nextStep} disabled={currentStepIndex >= solutionPath.length - 1} className="p-1 hover:bg-gray-100 rounded disabled:opacity-30"><Map size={14} /></button>
                       </div>
                     </div>
 
                     <div className="text-xs space-y-2">
                       <div className="flex gap-2 items-start">
                          <div className="min-w-[40px] font-mono font-bold bg-gray-800 text-white text-center rounded px-1 py-0.5">
-                           {hunt.solutionPath[currentStepIndex].refId}
+                           {solutionPath[currentStepIndex].refId}
                          </div>
                          <div className="text-gray-700 leading-tight">
-                           {hunt.solutionPath[currentStepIndex].description}
+                           {solutionPath[currentStepIndex].description}
                          </div>
                       </div>
 
-                      {currentStepIndex < hunt.solutionPath.length - 1 && (
+                      {currentStepIndex < solutionPath.length - 1 && (
                          <div className="flex justify-center text-gray-300 my-1">
                            <ArrowRight size={14} className="rotate-90" />
                          </div>

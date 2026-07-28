@@ -1,22 +1,10 @@
 import React from 'react';
 import { Reference } from '../types';
-import { Key, MapPin, Trophy, FileQuestion, ScrollText, Coins } from 'lucide-react';
 
 interface ReferenceListProps {
   references: Reference[];
   highlightedIds?: string[];
 }
-
-const RefIcon = ({ type }: { type: Reference['type'] }) => {
-  switch (type) {
-    case 'TREASURE': return <Trophy className="text-amber-700" size={13} />;
-    case 'PUZZLE': return <Key className="text-stone-700" size={13} />;
-    case 'POINTER': return <MapPin className="text-blue-800" size={13} />;
-    case 'DECOY': return <FileQuestion className="text-gray-400" size={13} />;
-    case 'COIN': return <Coins className="text-yellow-600" size={13} />;
-    default: return <ScrollText className="text-stone-600" size={13} />;
-  }
-};
 
 export const ReferenceList: React.FC<ReferenceListProps> = ({ references, highlightedIds = [] }) => {
   // Sort references by ID so it works like a dictionary
@@ -28,7 +16,7 @@ export const ReferenceList: React.FC<ReferenceListProps> = ({ references, highli
         Captain's Log
       </h3>
       
-      <div className="columns-2 gap-4 text-[10px] font-pirate-text">
+      <div className="columns-2 gap-5 text-[11px] font-pirate-text">
         {sortedRefs.map((ref) => {
           const isHighlighted = highlightedIds.includes(ref.id);
           
@@ -44,15 +32,12 @@ export const ReferenceList: React.FC<ReferenceListProps> = ({ references, highli
               `}
             >
               <div className="flex items-start gap-1.5">
-                <span className="font-bold font-mono text-[10px] text-stone-500 pt-0.5 min-w-[3ch]">
+                <span className="font-bold font-mono text-[11px] text-stone-900 pt-0.5 min-w-[4ch]">
                   {ref.id}
                 </span>
                 <div className="flex-grow leading-tight text-stone-800">
                   {ref.content}
                 </div>
-                 <div className="opacity-70 scale-90 pt-0.5 flex-shrink-0">
-                    <RefIcon type={ref.type} />
-                 </div>
               </div>
             </div>
           );

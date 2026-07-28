@@ -3,19 +3,27 @@ import { BookPage } from '../BookPage';
 import { ConceptSummary } from '../ConceptSummary';
 import { useBook, useHunt } from '../../contexts';
 import { Compass, BrainCircuit, Lightbulb } from 'lucide-react';
+import { NightChapterPage } from './NightChapterPage';
+import { AnswerGuide } from './AnswerGuide';
 
 interface BookContentProps {
   idPrefix: string;
+  showSimulationHighlights?: boolean;
+  showSolutions?: boolean;
 }
 
-export const BookContent: React.FC<BookContentProps> = ({ idPrefix }) => {
+export const BookContent: React.FC<BookContentProps> = ({
+  idPrefix,
+  showSimulationHighlights = true,
+  showSolutions = false,
+}) => {
   const { bookData, getPageForRef } = useBook();
   const { activeRefIds } = useHunt();
 
   return (
     <>
       {/* PAGE I: Intro / Title Page */}
-      <div className="w-[210mm] h-[297mm] mx-auto bg-white p-[20mm] shadow-lg print:shadow-none print:w-full page-break border border-gray-200 flex flex-col justify-center items-center text-center mb-8 print:mb-0 print:border-none relative overflow-hidden flex-shrink-0">
+      <div className="book-sheet w-[210mm] h-[297mm] mx-auto bg-white p-[20mm] shadow-lg print:shadow-none page-break border border-gray-200 flex flex-col justify-center items-center text-center mb-8 print:mb-0 print:border-none relative overflow-hidden flex-shrink-0">
           {/* Decorative Corner Borders */}
           <div className="absolute top-8 left-8 w-16 h-16 border-t-4 border-l-4 border-black" />
           <div className="absolute top-8 right-8 w-16 h-16 border-t-4 border-r-4 border-black" />
@@ -27,12 +35,15 @@ export const BookContent: React.FC<BookContentProps> = ({ idPrefix }) => {
           </div>
 
           <h1 className="text-6xl font-pirate-title text-black mb-8 leading-tight max-w-lg">{bookData.title}</h1>
+          <p className="font-pirate-text text-2xl mb-4">{bookData.subtitle}</p>
+          <p className="font-mono text-sm mb-8">{bookData.ageRange}</p>
 
           <div className="w-24 h-1 bg-stone-300 mb-8" />
 
           <p className="text-xl font-serif text-stone-700 mb-8 max-w-xl leading-relaxed">
-            This book is not just a collection of puzzles; it is a computer science course disguised as a pirate adventure.
-            Each treasure hunt is carefully designed to teach a fundamental algorithm or programming concept with only paper and a pencil.
+            When the lights go out, Morrow the Eight-Handed Cartographer slips through a blot of ink.
+            His islands are vanishing into the Blank Tide, and he cannot save them alone.
+            Keep a pencil close. Tonight, he may knock inside your pillow.
           </p>
 
           <div className="mt-20 text-center w-full px-12">
@@ -42,11 +53,13 @@ export const BookContent: React.FC<BookContentProps> = ({ idPrefix }) => {
             </div>
           </div>
 
-          <div className="mt-auto text-sm text-gray-400 font-mono">First Edition • Printed by React</div>
+          <div className="mt-auto text-sm text-gray-500 font-mono">First Edition • Pencil only • No child-facing screen required</div>
       </div>
 
 {/* PAGE II: Captain's Log & Curriculum (Hunts 1-9) */}
-      <div className="w-[210mm] h-[297mm] mx-auto bg-white p-[15mm] shadow-lg print:shadow-none print:w-full page-break border border-gray-200 flex flex-col mb-8 print:mb-0 print:border-none flex-shrink-0">
+      {(showSimulationHighlights || showSolutions) && (
+        <>
+      <div className="book-sheet w-[210mm] h-[297mm] mx-auto bg-white p-[15mm] shadow-lg print:shadow-none page-break border border-gray-200 flex flex-col mb-8 print:mb-0 print:border-none flex-shrink-0">
           <div className="text-center border-b-2 border-stone-800 pb-4 mb-4">
             <h2 className="font-pirate-title text-4xl text-stone-900">Captain's Log & Curriculum</h2>
             <p className="text-stone-500 font-serif italic text-sm mt-1">Map your course, learn the code, find the gold.</p>
@@ -108,7 +121,7 @@ export const BookContent: React.FC<BookContentProps> = ({ idPrefix }) => {
       </div>
 
       {/* PAGE III: Adventure Almanac (Hunts 10-20) */}
-      <div className="w-[210mm] h-[297mm] mx-auto bg-white p-[15mm] shadow-lg print:shadow-none print:w-full page-break border border-gray-200 flex flex-col mb-8 print:mb-0 print:border-none flex-shrink-0">
+      <div className="book-sheet w-[210mm] h-[297mm] mx-auto bg-white p-[15mm] shadow-lg print:shadow-none page-break border border-gray-200 flex flex-col mb-8 print:mb-0 print:border-none flex-shrink-0">
           <div className="text-center border-b-2 border-stone-800 pb-4 mb-4">
             <h2 className="font-pirate-title text-4xl text-stone-900">Adventure Almanac</h2>
             <p className="text-stone-500 font-serif italic text-sm mt-1">Future quests await the bold explorer.</p>
@@ -212,16 +225,29 @@ export const BookContent: React.FC<BookContentProps> = ({ idPrefix }) => {
             </table>
           </div>
       </div>
+        </>
+      )}
+
+      {/* Night chapter openings */}
+      {bookData.nights.map(night => (
+        <NightChapterPage
+          key={night.id}
+          night={night}
+          hunts={bookData.hunts.filter(hunt => night.huntIds.includes(hunt.id))}
+        />
+      ))}
 
       {/* Dynamic Pages (Maps) */}
       {bookData.pages.map((page) => (
         <div id={`${idPrefix}-${page.pageNumber}`} key={page.pageNumber} className="print:block print:w-full flex-shrink-0">
           <BookPage
             page={page}
-            highlightedRefIds={activeRefIds}
+            highlightedRefIds={showSimulationHighlights ? activeRefIds : []}
           />
         </div>
       ))}
+
+      {showSolutions && <AnswerGuide book={bookData} />}
     </>
   );
 };

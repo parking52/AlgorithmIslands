@@ -32,7 +32,7 @@ export function testBookValidation() {
   });
 
   console.log('\n🔗 Reference Graph:');
-  const graph = buildReferenceGraph(pageMetadata, structuredHunts);
+  const graph = buildReferenceGraph(STATIC_BOOK);
   console.log(`  Nodes: ${graph.nodes.length}, Edges: ${graph.edges.length}`);
 
   return {
